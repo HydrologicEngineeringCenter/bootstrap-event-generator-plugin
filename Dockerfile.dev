@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/devcontainers/java:1-21-bullseye as dev
+
+ENV TZ=America/New_York
+ENV GRADLE_HOME=/opt/gradle/latest
+ENV PATH=${GRADLE_HOME}/bin:$PATH
