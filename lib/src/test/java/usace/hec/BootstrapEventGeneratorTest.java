@@ -7,11 +7,9 @@ import org.junit.Test;
 
 import usace.hec.BootstrapEventGenerator;
 
-import static org.junit.Assert.*;
-
 public class BootstrapEventGeneratorTest {
     @Test public void someLibraryMethodReturnsTrue() {
-        String[] args = new String[]{"abc"};
-        BootstrapEventGenerator.main(args);;
+        String[] args = new String[]{"useLocal"};
+        usace.hec.BootstrapEventGenerator.main(args);;
     }
 }
