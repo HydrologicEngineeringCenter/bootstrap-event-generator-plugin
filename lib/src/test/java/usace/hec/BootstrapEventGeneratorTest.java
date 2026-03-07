@@ -3,13 +3,19 @@
  */
 package usace.hec;
 
+import static org.junit.Assert.assertThrows;
+
 import org.junit.Test;
 
 import usace.hec.BootstrapEventGenerator;
 
 public class BootstrapEventGeneratorTest {
-    @Test public void someLibraryMethodReturnsTrue() {
+    @Test public void mainMethodDoesNotThrowException() {
         String[] args = new String[]{"useLocal"};
-        usace.hec.BootstrapEventGenerator.main(args);;
+        BootstrapEventGenerator.main(args);
+    }
+    @Test public void mainMethodThrowsException() {
+        String[] args = new String[]{"abc"};
+        assertThrows(java.lang.IllegalArgumentException.class, () ->{BootstrapEventGenerator.main(args);});
     }
 }
