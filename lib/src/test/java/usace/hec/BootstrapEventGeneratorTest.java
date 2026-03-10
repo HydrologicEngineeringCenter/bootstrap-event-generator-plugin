@@ -6,16 +6,22 @@ package usace.hec;
 import static org.junit.Assert.assertThrows;
 
 import org.junit.Test;
-
-import usace.hec.BootstrapEventGenerator;
+import org.junit.Rule;
+import uk.org.webcompere.systemstubs.rules.EnvironmentVariablesRule;
 
 public class BootstrapEventGeneratorTest {
-    @Test public void mainMethodDoesNotThrowException() {
-        String[] args = new String[]{"useLocal"};
-        BootstrapEventGenerator.main(args);
+    @Rule
+    public EnvironmentVariablesRule environmentVariables = new EnvironmentVariablesRule();
+
+    @Test
+    public void mainMethodDoesNotThrowException() {
+        environmentVariables.set("CC_STORE_TYPE", "FS");
+        environmentVariables.set("FSB_ROOT_PATH", "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/");
+        BootstrapEventGenerator.main(null);
     }
     @Test public void mainMethodThrowsException() {
-        String[] args = new String[]{"abc"};
-        assertThrows(java.lang.IllegalArgumentException.class, () ->{BootstrapEventGenerator.main(args);});
+        environmentVariables.set("CC_STORE_TYPE", "S3");
+        environmentVariables.set("CC_AWS_DEFAULT_REGION", "us-gov-west-1");
+        assertThrows(java.lang.NullPointerException.class, () ->{BootstrapEventGenerator.main(null);});
     }
 }

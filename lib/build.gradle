@@ -20,13 +20,13 @@ repositories {
 dependencies {
     // Use JUnit test framework.
     testImplementation libs.junit
-
+    testImplementation "uk.org.webcompere:system-stubs-junit4:2.1.3"
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api libs.commons.math3
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation libs.guava
-    implementation files('/workspaces/bootstrap-event-generator-plugin/deps/cc-java-sdk-1.0.0-all.jar')
+    implementation files('/workspaces/bootstrap-event-generator-plugin/deps/cc-java-sdk-1.1.2-all.jar')
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
