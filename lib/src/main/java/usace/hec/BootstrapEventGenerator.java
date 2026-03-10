@@ -5,31 +5,35 @@ package usace.hec;
 import usace.cc.plugin.api.*;
 import usace.cc.plugin.api.IOManager.InvalidDataStoreException;
 import usace.cc.plugin.api.action_runner.ActionRunner.ActionRunnerException;
+import usace.cc.plugin.api.action_runner.ActionRunnerRegistry;
+import usace.hec.actions.ComputeAction;
 
 public class BootstrapEventGenerator {
     public static void main(String[] args) {
-            PluginManager pm;
-            try {
-                pm = PluginManager.getInstance();
-            } catch (InvalidDataStoreException e) {
-                e.printStackTrace();
-                System.out.println("could not find one of the datastores in payload to register.");
-                System.exit(-1);
-                return;
-            } catch (Exception e2){
-                e2.printStackTrace();
-                System.out.println("probably an issue connecting to the cc_store.");
-                System.exit(-1);
-                return;
-            }
-            try {
-                pm.RunActions();
-            } catch (ActionRunnerException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                System.exit(-1);
-                return;
-            }
+        ActionRunnerRegistry.getInstance().registerActionRunnerClass("compute", ComputeAction.class);
+        PluginManager pm;
+        try {
+            pm = PluginManager.getInstance();
+        } catch (InvalidDataStoreException e) {
+            e.printStackTrace();
+            System.out.println("could not find one of the datastores in payload to register.");
+            System.exit(-1);
+            return;
+        } catch (Exception e2){
+            e2.printStackTrace();
+            System.out.println("probably an issue connecting to the cc_store.");
+            System.exit(-1);
+            return;
+        }
+        try {
+            System.out.println(pm.getPayload().getActions().length);
+            pm.RunActions();
+        } catch (ActionRunnerException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.exit(-1);
+            return;
+        }
 
         return;
     }

@@ -1,0 +1,59 @@
+{
+  "attributes": {
+    "event-number": "{ENV::CC_EVENT_IDENTIFIER}",
+    "lifecycle-number": "{ENV::WAT_LIFECYCLE}", 
+    "realization-number": "{ENV::WAT_REALIZATION}", 
+    "simulation-name": "{ENV::WAT_SIMULATION}",
+    "analysis-period": "{ENV::WAT_ANALYSIS_PERIOD}",
+    "alternative": "{ENV::WAT_ALTERNATIVE}"
+  },
+  "stores": [
+    {
+      "name": "SIMULATIONS",
+      "store_type": "FS",
+      "profile": "WATSTORE",
+      "params": {
+        "root": "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/runs"
+      }
+    },
+    {
+      "name": "BASE",
+      "store_type": "FS",
+      "profile": "WATSTORE",
+      "params": {
+        "root": "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/bootstrap-event-generator"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "name": "model",
+      "paths": {
+       "file":"/settings.json"
+      },
+      "store_name": "WATSTORE"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "log",
+      "paths": {
+       "log":"/{ATTR::alternative}/{ATTR::analysis-period}/realization_{ATTR::realization-number}/lifecycle_{ATTR::lifecycle-number}/event_{ATTR::event-number}/bootstrap-event-generator/log.log"
+      },
+      "store_name": "WATSTORE"
+    }
+  ],
+  "actions": [{
+    "name": "compute",    
+    "type": "run",
+    "description": "computing bootstrap events",
+    "attributes": {
+        "attribute_1":"one",
+        "attribute_2":"two"
+        },
+    "inputs": [],
+    "outputs": []        
+    }
+
+  ]
+}

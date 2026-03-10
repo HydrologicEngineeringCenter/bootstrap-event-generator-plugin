@@ -16,6 +16,13 @@ public class BootstrapEventGeneratorTest {
     @Test
     public void mainMethodDoesNotThrowException() {
         environmentVariables.set("CC_STORE_TYPE", "FS");
+        environmentVariables.set("CC_EVENT_IDENTIFIER", "1");
+        environmentVariables.set("WAT_REALIZATION", "2");
+        environmentVariables.set("WAT_LIFECYCLE", "3");
+        environmentVariables.set("WAT_ALTERNATIVE", "wop");
+        environmentVariables.set("WAT_ANALYSIS_PERIOD", "base");
+        environmentVariables.set("WAT_SIMULATION", "wop-base");
+        environmentVariables.set("CC_STORE_TYPE", "FS");
         environmentVariables.set("FSB_ROOT_PATH", "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/");
         BootstrapEventGenerator.main(null);
     }
