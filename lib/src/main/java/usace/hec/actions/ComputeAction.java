@@ -2,7 +2,7 @@ package usace.hec.actions;
 
 import java.util.List;
 
-import usace.hec.model.BootstrapSampler;
+import usace.hec.model.WeightedBootstrapSampler;
 
 public class ComputeAction extends usace.cc.plugin.api.action_runner.ActionRunnerBase implements usace.cc.plugin.api.action_runner.ActionRunner  {
 
@@ -21,7 +21,7 @@ public class ComputeAction extends usace.cc.plugin.api.action_runner.ActionRunne
         System.out.println(super.getAction().getAttributes().get("event-weights").get());
         List<String> eventNames = (List<String>)super.getAction().getAttributes().get("event-names").get();
         List<Double> eventWeights = (List<Double>)super.getAction().getAttributes().get("event-weights").get();
-        BootstrapSampler bs = new BootstrapSampler(eventNames.toArray(String[]::new),eventWeights.toArray(Double[]::new) );
+        WeightedBootstrapSampler bs = new WeightedBootstrapSampler(eventNames.toArray(String[]::new),eventWeights.toArray(Double[]::new) );
         long seed =((Integer)super.getAction().getAttributes().get("seed").get()).longValue();
         String[] events = bs.sample((int)super.getAction().getAttributes().get("event-count").get(), seed);
         for (String event : events) {
