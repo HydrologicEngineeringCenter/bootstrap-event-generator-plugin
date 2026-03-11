@@ -1,10 +1,10 @@
 {
   "attributes": {
-    "event-number": "{ENV::CC_EVENT_IDENTIFIER}",
-    "lifecycle-number": "{ENV::WAT_LIFECYCLE}", 
-    "realization-number": "{ENV::WAT_REALIZATION}", 
-    "simulation-name": "{ENV::WAT_SIMULATION}",
-    "analysis-period": "{ENV::WAT_ANALYSIS_PERIOD}",
+    "eventnumber": "{ENV::CC_EVENT_IDENTIFIER}",
+    "lifecyclenumber": "{ENV::WAT_LIFECYCLE}", 
+    "realizationnumber": "{ENV::WAT_REALIZATION}", 
+    "simulationname": "{ENV::WAT_SIMULATION}",
+    "analysisperiod": "{ENV::WAT_ANALYSIS_PERIOD}",
     "alternative": "{ENV::WAT_ALTERNATIVE}"
   },
   "stores": [
@@ -31,16 +31,16 @@
       "paths": {
        "file":"/settings.json"
       },
-      "store_name": "WATSTORE"
+      "store_name": "BASE"
     }
   ],
   "outputs": [
     {
       "name": "log",
       "paths": {
-       "log":"/{ATTR::alternative}/{ATTR::analysis-period}/realization_{ATTR::realization-number}/lifecycle_{ATTR::lifecycle-number}/event_{ATTR::event-number}/bootstrap-event-generator/log.log"
+       "log":"/{ATTR::alternative}/{ATTR::analysisperiod}/realization_{ATTR::realizationnumber}/lifecycle_{ATTR::lifecyclenumber}/event_{ATTR::eventnumber}/bootstrap-event-generator/log.log"
       },
-      "store_name": "WATSTORE"
+      "store_name": "SIMULATIONS"
     }
   ],
   "actions": [{
@@ -48,8 +48,9 @@
     "type": "run",
     "description": "computing bootstrap events",
     "attributes": {
-        "attribute_1":"one",
-        "attribute_2":"two"
+        "event-count":100,
+        "seed":1234,
+        "event-names": ["brown","blue","violet-sky","hurtful","purple","anything-you-like"]
         },
     "inputs": [],
     "outputs": []        
