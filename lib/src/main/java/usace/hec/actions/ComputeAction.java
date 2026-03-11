@@ -18,8 +18,10 @@ public class ComputeAction extends usace.cc.plugin.api.action_runner.ActionRunne
         System.out.println(super.getAction().getAttributes().get("seed").get());
         System.out.println(super.getAction().getAttributes().get("event-count").get());
         System.out.println(super.getAction().getAttributes().get("event-names").get());
+        System.out.println(super.getAction().getAttributes().get("event-weights").get());
         List<String> eventNames = (List<String>)super.getAction().getAttributes().get("event-names").get();
-        BootstrapSampler bs = new BootstrapSampler(eventNames.toArray(String[]::new) );
+        List<Double> eventWeights = (List<Double>)super.getAction().getAttributes().get("event-weights").get();
+        BootstrapSampler bs = new BootstrapSampler(eventNames.toArray(String[]::new),eventWeights.toArray(Double[]::new) );
         long seed =((Integer)super.getAction().getAttributes().get("seed").get()).longValue();
         String[] events = bs.sample((int)super.getAction().getAttributes().get("event-count").get(), seed);
         for (String event : events) {
