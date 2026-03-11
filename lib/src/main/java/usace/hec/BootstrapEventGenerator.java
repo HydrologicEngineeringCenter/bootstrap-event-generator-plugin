@@ -26,7 +26,6 @@ public class BootstrapEventGenerator {
             return;
         }
         try {
-            System.out.println(pm.getPayload().getActions().length);
             pm.RunActions();
         } catch (ActionRunnerException e) {
             // TODO Auto-generated catch block
