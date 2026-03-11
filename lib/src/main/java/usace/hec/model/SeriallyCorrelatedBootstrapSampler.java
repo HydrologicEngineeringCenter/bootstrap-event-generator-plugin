@@ -21,9 +21,9 @@ public class SeriallyCorrelatedBootstrapSampler implements BootstrapSampler {
         //DoubleStream stream = rng.doubles(eventCount,0.0d, 1.0d);
         double previous = 0.0;//random initalization
         for(int i = 0; i<eventCount;i++){
-            double current = rng.nextDouble();
+            double current = rng.nextDouble();//uniform and fully random for the first value
             if(i!=0){
-                current = correlatedSample(previous, current, SerialCorrelation);
+                current = correlatedSample(previous, current, SerialCorrelation);//correlated and converted back to uniform space
             }
             output.add(EventNames[findIndex(current)]);
             previous = current;
@@ -48,6 +48,7 @@ public class SeriallyCorrelatedBootstrapSampler implements BootstrapSampler {
         //https://www.cmu.edu/biolphys/deserno/pdf/corr_gaussian_random.pdf
         double previousNormal = standardNormalInverse(previous);
         double errorNormal = standardNormalInverse(current);
+        //Apply AR(1) formula: r_next = phi * r_prev + sqrt(1 - phi^2) * epsilon
         double resultNormal = (correlation*previousNormal)+(Math.sqrt(1-Math.pow(correlation, 2.0d))+errorNormal);
         double result = standardNormalCDF(resultNormal);
         return result;
