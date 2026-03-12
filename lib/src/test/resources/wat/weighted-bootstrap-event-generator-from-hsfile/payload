@@ -25,24 +25,8 @@
       }
     }
   ],
-  "inputs": [
-    {
-      "name": "model",
-      "paths": {
-       "file":"/settings.json"
-      },
-      "store_name": "BASE"
-    }
-  ],
-  "outputs": [
-    {
-      "name": "log",
-      "paths": {
-       "log":"/{ATTR::alternative}/{ATTR::analysisperiod}/realization_{ATTR::realizationnumber}/lifecycle_{ATTR::lifecyclenumber}/event_{ATTR::eventnumber}/bootstrap-event-generator/log.log"
-      },
-      "store_name": "SIMULATIONS"
-    }
-  ],
+  "inputs": [],
+  "outputs": [],
   "actions": [{
     "name": "compute-weighted-bootstrap",    
     "type": "run",
