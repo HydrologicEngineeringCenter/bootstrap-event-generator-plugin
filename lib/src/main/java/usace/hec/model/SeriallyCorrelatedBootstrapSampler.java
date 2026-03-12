@@ -1,17 +1,22 @@
 package usace.hec.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
 
 
 public class SeriallyCorrelatedBootstrapSampler implements BootstrapSampler {
     private final String[] EventNames;
     private final Double[] Weights;
+    private final Double[] Magnitudes;
     private final double SerialCorrelation;
-    public SeriallyCorrelatedBootstrapSampler(String[] eventNames, Double[] weights, double serialCorrelation){
+    public SeriallyCorrelatedBootstrapSampler(String[] eventNames, Double[] weights, Double[] magnitudes, double serialCorrelation){
         EventNames = eventNames;
         Weights = weights;
+        Magnitudes = magnitudes;
         SerialCorrelation = serialCorrelation;
     }
     @Override
@@ -31,6 +36,28 @@ public class SeriallyCorrelatedBootstrapSampler implements BootstrapSampler {
         String[] result = output.toArray(String[]::new);
         return result ;
     }
+    @Override
+    public BootstrapSampler bootstrap(int equivalentYearsofRecord, long seed){
+        //bootstrap 
+        List<String> names = new ArrayList<String>();
+        List<Double> probs = new ArrayList<Double>();
+        List<Double> mags = new ArrayList<Double>();
+        Random rng = new Random(seed);
+        IntStream stream = rng.ints(equivalentYearsofRecord,0, EventNames.length);
+        IntConsumer consumer = (n) ->{
+            names.add(EventNames[n]);
+            probs.add(1.0d/EventNames.length);
+            mags.add(Magnitudes[n]);
+        };
+        stream.forEach(consumer);
+
+        //@TODO: probably need to rank the mags (and names and incrimental probs accordingly) so that the list is ordered by magnitude?
+        SortableElementSet set = new SortableElementSet(names, probs, mags);
+        set.sort();
+        
+        SeriallyCorrelatedBootstrapSampler result = new SeriallyCorrelatedBootstrapSampler(set.Names(),set.Probs(), set.Mags(),this.SerialCorrelation);
+        return result ;
+    }
     private int findIndex(double probability){
         double sum = 0;
         int index = 0;
@@ -43,6 +70,54 @@ public class SeriallyCorrelatedBootstrapSampler implements BootstrapSampler {
             sum = newSum;
         }
         return index;
+    }
+    private class SortableElementSet{
+        public SortableElement[] elements;
+        public SortableElementSet(List<String> names, List<Double> probs, List<Double> mags){
+            elements = new SortableElement[names.size()];
+            int idx = 0;
+            for (Double mag : mags) {
+                SortableElement ele = new SortableElement();
+                ele.mag = mag;
+                ele.name= names.get(idx);
+                ele.prob = probs.get(idx);
+                idx++;
+            }
+        }
+        public void sort(){
+            Arrays.sort(elements);
+        }
+        public String[] Names(){
+            List<String> names = new ArrayList<String>();
+            for (SortableElement ele : elements) {
+                names.add(ele.name);
+            }
+            return names.toArray(String[]::new);
+        }
+        public Double[] Mags(){
+            List<Double> mags = new ArrayList<Double>();
+            for (SortableElement ele : elements) {
+                mags.add(ele.mag);
+            }
+            return mags.toArray(Double[]::new);
+        }
+        public Double[] Probs(){
+            List<Double> probs = new ArrayList<Double>();
+            for (SortableElement ele : elements) {
+                probs.add(ele.prob);
+            }
+            return probs.toArray(Double[]::new);
+        }
+    }
+    private class SortableElement implements Comparable<SortableElement>{
+        public String name;
+        public Double prob;
+        public Double mag;
+        @Override
+        public int compareTo(SortableElement o) {
+            return o.mag.compareTo(this.mag);
+        }
+
     }
     private double correlatedSample(double previous, double current, double correlation){
         //https://www.cmu.edu/biolphys/deserno/pdf/corr_gaussian_random.pdf
