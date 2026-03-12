@@ -44,14 +44,13 @@
     }
   ],
   "actions": [{
-    "name": "compute",    
+    "name": "compute-simple-bootstrap",    
     "type": "run",
     "description": "computing bootstrap events",
     "attributes": {
         "event-count":100,
         "seed":1234,
-        "event-names": ["brown","blue","violet-sky","hurtful","purple","anything-you-like"],
-        "event-weights": [0.0,0.0,1.0,0.0,0.0,0.0]
+        "event-names": ["brown","blue","violet-sky","hurtful","purple","anything-you-like"]
         },
     "inputs": [],
     "outputs": []        

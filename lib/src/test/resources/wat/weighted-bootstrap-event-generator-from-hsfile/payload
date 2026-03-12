@@ -1,0 +1,69 @@
+{
+  "attributes": {
+    "eventnumber": "{ENV::CC_EVENT_IDENTIFIER}",
+    "lifecyclenumber": "{ENV::WAT_LIFECYCLE}", 
+    "realizationnumber": "{ENV::WAT_REALIZATION}", 
+    "simulationname": "{ENV::WAT_SIMULATION}",
+    "analysisperiod": "{ENV::WAT_ANALYSIS_PERIOD}",
+    "alternative": "{ENV::WAT_ALTERNATIVE}"
+  },
+  "stores": [
+    {
+      "name": "SIMULATIONS",
+      "store_type": "FS",
+      "profile": "WATSTORE",
+      "params": {
+        "root": "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/runs"
+      }
+    },
+    {
+      "name": "BASE",
+      "store_type": "FS",
+      "profile": "WATSTORE",
+      "params": {
+        "root": "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/bootstrap-event-generator"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "name": "model",
+      "paths": {
+       "file":"/settings.json"
+      },
+      "store_name": "BASE"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "log",
+      "paths": {
+       "log":"/{ATTR::alternative}/{ATTR::analysisperiod}/realization_{ATTR::realizationnumber}/lifecycle_{ATTR::lifecyclenumber}/event_{ATTR::eventnumber}/bootstrap-event-generator/log.log"
+      },
+      "store_name": "SIMULATIONS"
+    }
+  ],
+  "actions": [{
+    "name": "compute-weighted-bootstrap",    
+    "type": "run",
+    "description": "computing bootstrap events",
+    "attributes": {
+        "event-count":100,
+        "seed":1234,
+        "use-hs-file": true,
+        "hs-file-datasource": "model"
+    },
+    "inputs": [
+        {
+          "name": "model",
+          "paths": {
+            "hs-file":"/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/weighted-bootstrap-event-generator-from-hsfile/CRT_HS_2020L.hs"
+          },
+          "store_name": "BASE"
+        }
+      ],
+    "outputs": []        
+    }
+
+  ]
+}

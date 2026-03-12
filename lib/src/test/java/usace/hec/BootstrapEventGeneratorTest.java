@@ -14,7 +14,7 @@ public class BootstrapEventGeneratorTest {
     public EnvironmentVariablesRule environmentVariables = new EnvironmentVariablesRule();
 
     @Test
-    public void mainMethodDoesNotThrowException() {
+    public void simpleBootstrapTesting() {
         environmentVariables.set("CC_STORE_TYPE", "FS");
         environmentVariables.set("CC_EVENT_IDENTIFIER", "1");
         environmentVariables.set("WAT_REALIZATION", "2");
@@ -23,7 +23,33 @@ public class BootstrapEventGeneratorTest {
         environmentVariables.set("WAT_ANALYSIS_PERIOD", "base");
         environmentVariables.set("WAT_SIMULATION", "wop-base");
         environmentVariables.set("CC_STORE_TYPE", "FS");
-        environmentVariables.set("FSB_ROOT_PATH", "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/");
+        environmentVariables.set("FSB_ROOT_PATH", "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/simple-bootstrap-event-generator");
+        BootstrapEventGenerator.main(null);
+    }
+    @Test
+    public void weightedBootstrapTesting() {
+        environmentVariables.set("CC_STORE_TYPE", "FS");
+        environmentVariables.set("CC_EVENT_IDENTIFIER", "2");
+        environmentVariables.set("WAT_REALIZATION", "1");
+        environmentVariables.set("WAT_LIFECYCLE", "3");
+        environmentVariables.set("WAT_ALTERNATIVE", "wop");
+        environmentVariables.set("WAT_ANALYSIS_PERIOD", "base");
+        environmentVariables.set("WAT_SIMULATION", "wop-base");
+        environmentVariables.set("CC_STORE_TYPE", "FS");
+        environmentVariables.set("FSB_ROOT_PATH", "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/weighted-bootstrap-event-generator");
+        BootstrapEventGenerator.main(null);
+    }
+    @Test
+    public void weightedBootstrapfromHSTesting() {
+        environmentVariables.set("CC_STORE_TYPE", "FS");
+        environmentVariables.set("CC_EVENT_IDENTIFIER", "3");
+        environmentVariables.set("WAT_REALIZATION", "1");
+        environmentVariables.set("WAT_LIFECYCLE", "3");
+        environmentVariables.set("WAT_ALTERNATIVE", "wop");
+        environmentVariables.set("WAT_ANALYSIS_PERIOD", "base");
+        environmentVariables.set("WAT_SIMULATION", "wop-base");
+        environmentVariables.set("CC_STORE_TYPE", "FS");
+        environmentVariables.set("FSB_ROOT_PATH", "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/weighted-bootstrap-event-generator-from-hsfile");
         BootstrapEventGenerator.main(null);
     }
     @Test public void mainMethodThrowsException() {
