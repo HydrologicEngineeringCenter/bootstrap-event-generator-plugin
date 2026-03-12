@@ -2,9 +2,9 @@ package usace.hec.actions;
 
 import java.util.List;
 
-import usace.hec.model.WeightedBootstrapSampler;
+import usace.hec.model.SimpleBootstrapSampler;
 
-public class ComputeAction extends usace.cc.plugin.api.action_runner.ActionRunnerBase implements usace.cc.plugin.api.action_runner.ActionRunner  {
+public class ComputeSimpleBootstrapAction extends usace.cc.plugin.api.action_runner.ActionRunnerBase implements usace.cc.plugin.api.action_runner.ActionRunner  {
 
     @Override
     public String GetName() {
@@ -18,10 +18,10 @@ public class ComputeAction extends usace.cc.plugin.api.action_runner.ActionRunne
         System.out.println(super.getAction().getAttributes().get("seed").get());
         System.out.println(super.getAction().getAttributes().get("event-count").get());
         System.out.println(super.getAction().getAttributes().get("event-names").get());
-        System.out.println(super.getAction().getAttributes().get("event-weights").get());
+        
         List<String> eventNames = (List<String>)super.getAction().getAttributes().get("event-names").get();
-        List<Double> eventWeights = (List<Double>)super.getAction().getAttributes().get("event-weights").get();
-        WeightedBootstrapSampler bs = new WeightedBootstrapSampler(eventNames.toArray(String[]::new),eventWeights.toArray(Double[]::new) );
+        
+        SimpleBootstrapSampler bs = new SimpleBootstrapSampler(eventNames.toArray(String[]::new) );
         long seed =((Integer)super.getAction().getAttributes().get("seed").get()).longValue();
         String[] events = bs.sample((int)super.getAction().getAttributes().get("event-count").get(), seed);
         for (String event : events) {

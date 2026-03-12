@@ -6,11 +6,13 @@ import usace.cc.plugin.api.*;
 import usace.cc.plugin.api.IOManager.InvalidDataStoreException;
 import usace.cc.plugin.api.action_runner.ActionRunner.ActionRunnerException;
 import usace.cc.plugin.api.action_runner.ActionRunnerRegistry;
-import usace.hec.actions.ComputeAction;
+import usace.hec.actions.ComputeSimpleBootstrapAction;
+import usace.hec.actions.ComputeWeightedBootstrapAction;
 
 public class BootstrapEventGenerator {
     public static void main(String[] args) {
-        ActionRunnerRegistry.getInstance().registerActionRunnerClass("compute", ComputeAction.class);
+        ActionRunnerRegistry.getInstance().registerActionRunnerClass("compute-simple-bootstrap", ComputeSimpleBootstrapAction.class);
+        ActionRunnerRegistry.getInstance().registerActionRunnerClass("compute-weighted-bootstrap", ComputeWeightedBootstrapAction.class);
         PluginManager pm;
         try {
             pm = PluginManager.getInstance();
