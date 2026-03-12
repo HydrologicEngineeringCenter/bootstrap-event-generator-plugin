@@ -100,6 +100,24 @@ public class hsReader {
         // Getters and Setters
         public List<Entry> getEntries() { return entries; }
         public void setEntries(List<Entry> entries) { this.entries = entries; }
+        public Double[] getWeights(){
+            Double[] weights = new Double[entries.size()];
+            int idx = 0;
+            for (Entry entry : entries) {
+                weights[idx] = entry.IncrProb;
+                idx ++;
+            }
+            return weights;
+        }
+        public String[] getNames(){
+            String[] names = new String[entries.size()];
+            int idx = 0;
+            for (Entry entry : entries) {
+                names[idx] = entry.WaterYear;
+                idx ++;
+            }
+            return names;
+        }
     }
 
     public static class Entry {
