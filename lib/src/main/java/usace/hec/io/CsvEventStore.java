@@ -106,7 +106,8 @@ public class CsvEventStore implements ConnectionDataStore, MultiDimensionalArray
 
     @Override
     public Object rawSession() {
-        return basePath;
+        //seession has to implement the Multidimensional array store
+        return this;
     }
     
 }

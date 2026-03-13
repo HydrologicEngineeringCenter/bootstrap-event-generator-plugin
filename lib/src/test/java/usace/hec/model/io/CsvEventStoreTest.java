@@ -32,7 +32,7 @@ public class CsvEventStoreTest {
         environmentVariables.set("WAT_SIMULATION", "wop-base");
         environmentVariables.set("CC_STORE_TYPE", "FS");
         environmentVariables.set("FSB_ROOT_PATH", "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/runs");
-
+        //need to register the connection datastore for the csv reader
         PluginManager pm;
         try {
             pm = PluginManager.getInstance();
