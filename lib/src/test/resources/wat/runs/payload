@@ -1,0 +1,31 @@
+{
+  "attributes": {
+    "eventnumber": "{ENV::CC_EVENT_IDENTIFIER}",
+    "lifecyclenumber": "{ENV::WAT_LIFECYCLE}", 
+    "realizationnumber": "{ENV::WAT_REALIZATION}", 
+    "simulationname": "{ENV::WAT_SIMULATION}",
+    "analysisperiod": "{ENV::WAT_ANALYSIS_PERIOD}",
+    "alternative": "{ENV::WAT_ALTERNATIVE}"
+  },
+  "stores": [
+    {
+      "name": "SIMULATIONS",
+      "store_type": "FS",
+      "profile": "WATSTORE",
+      "params": {
+        "root": "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/runs"
+      }
+    },
+    {
+      "name": "EVENT_STORE",
+      "store_type": "FS",
+      "profile": "WATSTORE",
+      "params": {
+        "root": "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/runs"
+      }
+    }
+  ],
+  "inputs": [],
+  "outputs": [],
+  "actions": []
+}
