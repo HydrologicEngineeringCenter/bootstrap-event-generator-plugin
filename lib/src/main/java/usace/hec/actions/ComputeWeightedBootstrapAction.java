@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import usace.cc.plugin.api.DataSource;
-import usace.hec.model.WeightedBootstrapSampler;
+import usace.hec.model.bootstrap.WeightedBootstrapSampler;
 import usace.hec.model.hs.hsReader;
 import usace.hec.model.hs.hsReader.HydrologicSampling;
 

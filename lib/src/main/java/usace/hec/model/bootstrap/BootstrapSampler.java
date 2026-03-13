@@ -1,4 +1,4 @@
-package usace.hec.model;
+package usace.hec.model.bootstrap;
 
 public interface BootstrapSampler {
     public String[] sample(int eventCount, long seed);

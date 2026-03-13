@@ -2,7 +2,7 @@ package usace.hec.model.hs;
 
 import org.junit.Test;
 
-import usace.hec.model.WeightedBootstrapSampler;
+import usace.hec.model.bootstrap.WeightedBootstrapSampler;
 import usace.hec.model.hs.hsReader.HydrologicSampling;
 public class hsReaderTest {
     @Test

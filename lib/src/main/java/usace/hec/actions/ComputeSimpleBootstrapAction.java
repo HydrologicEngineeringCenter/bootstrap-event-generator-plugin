@@ -2,7 +2,7 @@ package usace.hec.actions;
 
 import java.util.List;
 
-import usace.hec.model.SimpleBootstrapSampler;
+import usace.hec.model.bootstrap.SimpleBootstrapSampler;
 
 public class ComputeSimpleBootstrapAction extends usace.cc.plugin.api.action_runner.ActionRunnerBase implements usace.cc.plugin.api.action_runner.ActionRunner  {
 

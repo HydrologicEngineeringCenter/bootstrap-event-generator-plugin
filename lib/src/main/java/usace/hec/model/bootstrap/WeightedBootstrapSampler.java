@@ -1,4 +1,4 @@
-package usace.hec.model;
+package usace.hec.model.bootstrap;
 
 import java.util.ArrayList;
 import java.util.List;
