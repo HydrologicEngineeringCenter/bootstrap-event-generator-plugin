@@ -5,15 +5,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.Optional;
 
 import usace.cc.plugin.api.ConnectionDataStore;
 import usace.cc.plugin.api.DataStore;
 import usace.cc.plugin.api.EnvironmentVariables;
 import usace.cc.plugin.api.eventstore.ArrayResult;
+import usace.cc.plugin.api.eventstore.EventStore;
 import usace.cc.plugin.api.eventstore.EventStore.ArrayAttribute;
 import usace.cc.plugin.api.eventstore.EventStore.CreateArrayInput;
 import usace.cc.plugin.api.eventstore.EventStore.GetArrayInput;
+import usace.cc.plugin.api.eventstore.EventStore.PutArrayBuffer;
 import usace.cc.plugin.api.eventstore.EventStore.PutArrayInput;
 import usace.cc.plugin.api.eventstore.MultiDimensionalArrayStore;
 
@@ -30,7 +33,8 @@ public class CsvEventStore implements ConnectionDataStore, MultiDimensionalArray
         Path fullPath = Paths.get(basePath).resolve(cai.arrayPath);
         try {
             if (Files.exists(fullPath)) {
-                throw new Exception("Array already exists at: " + fullPath);
+                Files.delete(fullPath);//TODO: remove this line or change behavior to append.
+                //throw new Exception("Array already existed at: " + fullPath);
             }
             // Create parent directories if needed
             Files.createDirectories(fullPath.getParent());
@@ -51,15 +55,91 @@ public class CsvEventStore implements ConnectionDataStore, MultiDimensionalArray
 
     @Override
     public ArrayResult getArray(GetArrayInput gai) throws Exception {
-       System.out.print(gai);
-       return null;
+       //System.out.print(gai);
+       ArrayResult ar = new ArrayResult();
+       long firstRow = gai.bufferRange[0];
+       long lastRow = gai.bufferRange[1];
+       Path fullPath = Paths.get(basePath).resolve(gai.arrayPath);
+       List<String> lines = Files.readAllLines(fullPath);
+        long idx = 0;
+        Object[] buffer = new Object[gai.attrs.length];
+        long[][] offsets = new long[gai.attrs.length][(int)lastRow-(int)firstRow+1];
+        for(int column = 0; column<gai.attrs.length; column++){
+            Object columnData = null;
+            boolean isDouble = true;
+        for (String string : lines) {
+
+                if (idx >= firstRow){
+                    String value = string.split(",")[column];
+                    try{
+                        Double dblvalue = Double.parseDouble(value);
+                        columnData = new Double[(int)lastRow-(int)firstRow+1];//fenceposts are weird
+                    }catch(NumberFormatException ex){
+                        isDouble = false;
+                        columnData = new String();
+                    }
+                    
+                    if(idx<=lastRow){
+                        //retrieve data.
+                        String rowcolvalue = string.split(",")[column];
+                        if(isDouble){
+                            try{
+                                Double cellvalue = Double.parseDouble(rowcolvalue);
+                                ((Double[])columnData)[(int)idx-1]=cellvalue;
+                            }catch(NumberFormatException ex){
+                                isDouble = false;
+                            }   
+                        }else{
+                            offsets[column][(int)idx-1] = (long)((String)columnData).length();
+                            columnData += rowcolvalue;
+                        }
+
+                    }
+                }
+                idx ++;
+        }  
+        buffer[column] = columnData;          
+        }
+        ar.buffers = buffer;
+        ar.offsetBuffers = offsets;
+       //read in the csv, parse it return objects for the buffers (Double[] and String with offsets.)
+       return ar;
     }
 
     @Override
     public void putArray(PutArrayInput pai) throws Exception {
-        long buffersize = pai.bufferRange[1];//expected count of rows being put in the case of a record set...
-        System.out.print(buffersize);
-        System.out.print(pai);
+        //buffer range is the range in the rows 1 based index not 0 based...
+        long nrows = pai.bufferRange[1];//expected last rows being put in the case of a record set...
+        if(pai.putLayout!=EventStore.LayoutOrder.ROWMAJOR){throw new Exception("do not support column layout");}
+        Object[][] data = new Object[pai.buffers.length][(int) nrows];
+        int row = 0;
+        for (PutArrayBuffer pab : pai.buffers) {
+            System.out.println(pab.attrName);
+            System.out.println(pab.buffer);
+            if(pab.buffer.getClass()==String.class){
+                String[] strings = new String[(int)nrows];
+                String strdata = (String)pab.buffer;
+                for(int i =0; i < pab.offsets.length-1;i++){
+                    strings[i] = strdata.substring((int)pab.offsets[i], (int)pab.offsets[i+1]); 
+                }
+                strings[pab.offsets.length-1] = strdata.substring((int)pab.offsets[pab.offsets.length-1]);
+                data[row] =strings;
+            }else{
+                data[row] = (Object[])pab.buffer;
+            }
+            row ++;
+        }
+        //write it.
+        Path fullPath = Paths.get(basePath).resolve(pai.arrayPath);
+        String strData = "";
+        for(int r=0; r < nrows;r++){
+            for(int col = 0; col<pai.buffers.length;col++){
+                strData += data[col][r].toString() + ",";
+            }
+            strData = strData.substring(0,strData.length()-1) + "\n";
+        }
+        strData = strData.substring(0,strData.length()-1);
+        Files.writeString(fullPath, strData, StandardOpenOption.APPEND);
     }
 
     @Override

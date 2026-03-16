@@ -4,6 +4,7 @@
 package usace.hec.model.io;
 
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -12,8 +13,11 @@ import org.junit.Test;
 import org.junit.Rule;
 import uk.org.webcompere.systemstubs.rules.EnvironmentVariablesRule;
 import usace.cc.plugin.api.DataStore;
+import usace.cc.plugin.api.DataStoreTypeRegistry;
 import usace.cc.plugin.api.IOManager.InvalidDataStoreException;
 import usace.cc.plugin.api.PluginManager;
+import usace.cc.plugin.api.StoreType;
+import usace.hec.io.CsvEventStore;
 import usace.hec.model.timeseries.TimeSeries;
 import usace.hec.model.timeseries.TimeSeriesRecord;
 
@@ -33,6 +37,7 @@ public class CsvEventStoreTest {
         environmentVariables.set("CC_STORE_TYPE", "FS");
         environmentVariables.set("FSB_ROOT_PATH", "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/runs");
         //need to register the connection datastore for the csv reader
+        DataStoreTypeRegistry.registry.put(StoreType.WS, CsvEventStore.class);
         PluginManager pm;
         try {
             pm = PluginManager.getInstance();
@@ -49,12 +54,13 @@ public class CsvEventStoreTest {
         }
         Optional<DataStore> ds = pm.getPayload().getStore("EVENT_STORE");
         TimeSeriesRecord[] records = new TimeSeriesRecord[3];
-        records[0] = new TimeSeriesRecord(ZonedDateTime.now(), 1.0d);
-        records[1] = new TimeSeriesRecord(ZonedDateTime.now(), 2.0d);
-        records[2] = new TimeSeriesRecord(ZonedDateTime.now(), 3.0d);
+        records[0] = new TimeSeriesRecord(ZonedDateTime.now().toString(), 1.0d);
+        records[1] = new TimeSeriesRecord(ZonedDateTime.now().toString(), 2.0d);
+        records[2] = new TimeSeriesRecord(ZonedDateTime.now().toString(), 3.0d);
         TimeSeries ts = new TimeSeries("event_1/ts.csv", records);
         ts.Write(ds.get());
-        TimeSeries tsread = TimeSeries.ReadAll(ds.get(), "event_1/ts.csv");
+        TimeSeries tsread = ts.Read(ds.get(), "event_1/ts.csv",1l,3l);
+        assertTrue(records[2].Value==tsread.timeSeries[2].Value);
     }
 
 }

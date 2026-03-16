@@ -6,11 +6,11 @@ import usace.cc.plugin.api.eventstore.Recordset.EventStoreAttr;
 
 public class TimeSeriesRecord {
     @EventStoreAttr("time")
-    public ZonedDateTime Time;
+    public String Time;
     @EventStoreAttr("value")
     public Double Value;
     public TimeSeriesRecord(){}
-    public TimeSeriesRecord(ZonedDateTime time, Double value){
+    public TimeSeriesRecord(String time, Double value){
         Time = time;
         Value = value;
     }

@@ -18,7 +18,7 @@
     },
     {
       "name": "EVENT_STORE",
-      "store_type": "FS",
+      "store_type": "WS",
       "profile": "WATSTORE",
       "params": {
         "root": "/workspaces/bootstrap-event-generator-plugin/lib/src/test/resources/wat/runs"

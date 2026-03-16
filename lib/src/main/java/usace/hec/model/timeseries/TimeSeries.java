@@ -6,13 +6,14 @@ import usace.cc.plugin.api.eventstore.Recordset;
 public class TimeSeries {
     public TimeSeriesRecord[] timeSeries;
     public String storagePath;
+    Recordset<TimeSeriesRecord> rs;
     public TimeSeries(){}
     public TimeSeries(String path, TimeSeriesRecord[] records){
         storagePath = path;
         timeSeries = records;
     }
     public void Write(DataStore ds){
-        Recordset<TimeSeriesRecord> rs = new Recordset<>(ds,storagePath);//@TODO: determine how to handle datastores elegantly.
+        rs = new Recordset<>(ds,storagePath);//@TODO: determine how to handle datastores elegantly.
         try {
             rs.create(timeSeries);
         } catch (Exception e) {
@@ -20,10 +21,9 @@ public class TimeSeries {
             e.printStackTrace();
         }
     }
-    public static TimeSeries ReadAll(DataStore ds, String path){
-        Recordset<TimeSeriesRecord> rs = new Recordset<>(ds,path);//@TODO: determine how to handle datastores elegantly.
+    public TimeSeries Read(DataStore ds, String path, long... recrange){
         try {
-            TimeSeriesRecord[] out = rs.read(TimeSeriesRecord.class);
+            TimeSeriesRecord[] out = rs.read(TimeSeriesRecord.class, recrange);
             return new TimeSeries(path,out);
         } catch (Exception e) {
             // TODO Auto-generated catch block
