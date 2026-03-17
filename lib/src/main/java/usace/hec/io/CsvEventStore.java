@@ -67,17 +67,19 @@ public class CsvEventStore implements ConnectionDataStore, MultiDimensionalArray
         for(int column = 0; column<gai.attrs.length; column++){
             Object columnData = null;
             boolean isDouble = true;
+            idx = 0;
+            String value = lines.get((int)firstRow).split(",")[column];
+            try{
+                Double dblvalue = Double.parseDouble(value);
+                columnData = new Double[(int)lastRow-(int)firstRow+1];//fenceposts are weird
+            }catch(NumberFormatException ex){
+                isDouble = false;
+                columnData = new String();
+            }
         for (String string : lines) {
 
                 if (idx >= firstRow){
-                    String value = string.split(",")[column];
-                    try{
-                        Double dblvalue = Double.parseDouble(value);
-                        columnData = new Double[(int)lastRow-(int)firstRow+1];//fenceposts are weird
-                    }catch(NumberFormatException ex){
-                        isDouble = false;
-                        columnData = new String();
-                    }
+
                     
                     if(idx<=lastRow){
                         //retrieve data.

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -54,9 +55,10 @@ public class CsvEventStoreTest {
         }
         Optional<DataStore> ds = pm.getPayload().getStore("EVENT_STORE");
         TimeSeriesRecord[] records = new TimeSeriesRecord[3];
-        records[0] = new TimeSeriesRecord(ZonedDateTime.now().toString(), 1.0d);
-        records[1] = new TimeSeriesRecord(ZonedDateTime.now().toString(), 2.0d);
-        records[2] = new TimeSeriesRecord(ZonedDateTime.now().toString(), 3.0d);
+        DateTimeFormatter customFormatter = DateTimeFormatter.ofPattern("ddMMMyyyy");
+        records[0] = new TimeSeriesRecord(ZonedDateTime.now().format(customFormatter), 1.0d);
+        records[1] = new TimeSeriesRecord(ZonedDateTime.now().format(customFormatter), 2.0d);
+        records[2] = new TimeSeriesRecord(ZonedDateTime.now().format(customFormatter), 3.0d);
         TimeSeries ts = new TimeSeries("event_1/ts.csv", records);
         ts.Write(ds.get());
         TimeSeries tsread = ts.Read(ds.get(), "event_1/ts.csv",1l,3l);
