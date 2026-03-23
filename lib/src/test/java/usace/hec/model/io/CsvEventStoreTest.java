@@ -62,7 +62,8 @@ public class CsvEventStoreTest {
         TimeSeries ts = new TimeSeries("event_1/ts.csv", records);
         ts.Write(ds.get());
         TimeSeries tsread = ts.Read(ds.get(), "event_1/ts.csv",1l,3l);
-        assertTrue(records[2].Value==tsread.timeSeries[2].Value);
+        assertTrue(records[2].Value.equals(tsread.timeSeries[2].Value));
+        
     }
 
 }

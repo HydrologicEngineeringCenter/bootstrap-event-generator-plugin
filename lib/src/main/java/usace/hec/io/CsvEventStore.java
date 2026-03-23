@@ -1,6 +1,7 @@
 package usace.hec.io;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -99,8 +100,14 @@ public class CsvEventStore implements ConnectionDataStore, MultiDimensionalArray
                     }
                 }
                 idx ++;
-        }  
-        buffer[column] = columnData;          
+        } 
+        if(isDouble){
+            buffer[column] = columnData;  
+        } else{
+            String col = (String)columnData;
+            buffer[column] = col.getBytes(StandardCharsets.UTF_8);
+        }
+                
         }
         ar.buffers = buffer;
         ar.offsetBuffers = offsets;
